@@ -6,6 +6,7 @@ var aliensGrp, missilesGrp;
 var gameState = 'play';
 var gameOver_img, reset_button, reset_button_img;
 var score = 0;
+var gameOver_snd, replay_snd, start_snd;
 
 function preload(){
   //background
@@ -29,12 +30,17 @@ function preload(){
 
  //reset
  reset_button_img = loadImage("Images/replay button.png");
+
+ //loading the sounds
+  gameOver_snd = loadSound("Sounds/game over.wav");
+  replay_snd = loadSound("Sounds/replay.wav");
+  start_snd = loadSound("Sounds/start.wav");
  
 }
 
 function setup() {
 
-  createCanvas(displayWidth-30, displayHeight-150);
+  createCanvas(windowWidth, windowHeight);
 
 //creating the background
   bg =  createSprite(width/2, height/2);
@@ -56,6 +62,8 @@ function setup() {
 
   aliensGrp = new Group ();
   missilesGrp = new Group ();
+
+  start_snd.play();
 }
 
 function draw() {
@@ -94,7 +102,7 @@ function draw() {
 
   if(aliensGrp.isTouching(spaceShip)){
     gameState = 'end';
-   
+   gameOver_snd.play();
   }
 }
 
@@ -110,12 +118,14 @@ function draw() {
     bg.scale = 0.7;
 
     reset_button.visible = true;
-    
+   
+    if(mousePressedOver(reset_button)){
+      restart();
+      replay_snd.play();
+    }
+  
 }
 
-  if(mousePressedOver(reset_button)){
-    restart();
-  }
 
   drawSprites();
   textSize(40);
